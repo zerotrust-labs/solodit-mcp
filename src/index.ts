@@ -160,23 +160,77 @@ mcpServer.registerTool(
     description:
       "Search Solodit for smart contract security findings and vulnerabilities. You can filter by keywords, impact level, audit firms, tags, protocols, and more.",
     inputSchema: {
-      keywords: z.string().optional().describe("Search keywords to find in title and content"),
-      impact: z.array(z.enum(["HIGH", "MEDIUM", "LOW", "GAS"])).optional().describe("Filter by impact level (severity)"),
-      firms: z.array(z.string()).optional().describe("Filter by audit firm names (e.g., Cyfrin, Sherlock, Code4rena)"),
-      tags: z.array(z.string()).optional().describe("Filter by vulnerability tags (e.g., Reentrancy, Oracle, Access Control)"),
-      protocol: z.string().optional().describe("Filter by protocol name (partial match)"),
-      protocolCategory: z.array(z.string()).optional().describe("Filter by protocol categories (e.g., DeFi, NFT, Lending)"),
-      languages: z.array(z.string()).optional().describe("Filter by programming languages (e.g., Solidity, Rust, Cairo)"),
-      user: z.string().optional().describe("Filter by finder/auditor handle (partial match)"),
+      keywords: z
+        .string()
+        .optional()
+        .describe("Search keywords to find in title and content"),
+      impact: z
+        .array(z.enum(["HIGH", "MEDIUM", "LOW", "GAS"]))
+        .optional()
+        .describe("Filter by impact level (severity)"),
+      firms: z
+        .array(z.string())
+        .optional()
+        .describe(
+          "Filter by audit firm names (e.g., Cyfrin, Sherlock, Code4rena)"
+        ),
+      tags: z
+        .array(z.string())
+        .optional()
+        .describe(
+          "Filter by vulnerability tags (e.g., Reentrancy, Oracle, Access Control)"
+        ),
+      protocol: z
+        .string()
+        .optional()
+        .describe("Filter by protocol name (partial match)"),
+      protocolCategory: z
+        .array(z.string())
+        .optional()
+        .describe("Filter by protocol categories (e.g., DeFi, NFT, Lending)"),
+      languages: z
+        .array(z.string())
+        .optional()
+        .describe(
+          "Filter by programming languages (e.g., Solidity, Rust, Cairo)"
+        ),
+      user: z
+        .string()
+        .optional()
+        .describe("Filter by finder/auditor handle (partial match)"),
       minFinders: z.string().optional().describe("Minimum number of finders"),
       maxFinders: z.string().optional().describe("Maximum number of finders"),
-      reportedDays: z.enum(["30", "60", "90", "alltime"]).optional().describe("Filter by time period (30, 60, 90 days, or alltime)"),
-      qualityScore: z.number().min(0).max(5).optional().describe("Minimum quality score (0-5)"),
-      rarityScore: z.number().min(0).max(5).optional().describe("Minimum rarity score (0-5)"),
-      sortField: z.enum(["Recency", "Quality", "Rarity"]).optional().describe("Sort by field (default: Recency)"),
-      sortDirection: z.enum(["Desc", "Asc"]).optional().describe("Sort direction (default: Desc)"),
+      reportedDays: z
+        .enum(["30", "60", "90", "alltime"])
+        .optional()
+        .describe("Filter by time period (30, 60, 90 days, or alltime)"),
+      qualityScore: z
+        .number()
+        .min(0)
+        .max(5)
+        .optional()
+        .describe("Minimum quality score (0-5)"),
+      rarityScore: z
+        .number()
+        .min(0)
+        .max(5)
+        .optional()
+        .describe("Minimum rarity score (0-5)"),
+      sortField: z
+        .enum(["Recency", "Quality", "Rarity"])
+        .optional()
+        .describe("Sort by field (default: Recency)"),
+      sortDirection: z
+        .enum(["Desc", "Asc"])
+        .optional()
+        .describe("Sort direction (default: Desc)"),
       page: z.number().min(1).optional().describe("Page number (default: 1)"),
-      pageSize: z.number().min(1).max(100).optional().describe("Results per page (default: 20, max: 100)"),
+      pageSize: z
+        .number()
+        .min(1)
+        .max(100)
+        .optional()
+        .describe("Results per page (default: 20, max: 100)"),
     },
   },
   async (args) => {
@@ -185,15 +239,13 @@ mcpServer.registerTool(
 
     if (args.keywords) filters.keywords = args.keywords;
     if (args.impact) filters.impact = args.impact;
-    if (args.firms)
-      filters.firms = args.firms.map((f) => ({ value: f }));
-    if (args.tags)
-      filters.tags = args.tags.map((t) => ({ value: t }));
+    if (args.firms) filters.firms = args.firms.map((f) => ({ value: f }));
+    if (args.tags) filters.tags = args.tags.map((t) => ({ value: t }));
     if (args.protocol) filters.protocol = args.protocol;
     if (args.protocolCategory)
-      filters.protocolCategory = args.protocolCategory.map(
-        (c) => ({ value: c })
-      );
+      filters.protocolCategory = args.protocolCategory.map((c) => ({
+        value: c,
+      }));
     if (args.languages)
       filters.languages = args.languages.map((l) => ({
         value: l,
@@ -207,12 +259,9 @@ mcpServer.registerTool(
       };
     if (args.qualityScore !== undefined)
       filters.qualityScore = args.qualityScore;
-    if (args.rarityScore !== undefined)
-      filters.rarityScore = args.rarityScore;
-    if (args.sortField)
-      filters.sortField = args.sortField;
-    if (args.sortDirection)
-      filters.sortDirection = args.sortDirection;
+    if (args.rarityScore !== undefined) filters.rarityScore = args.rarityScore;
+    if (args.sortField) filters.sortField = args.sortField;
+    if (args.sortDirection) filters.sortDirection = args.sortDirection;
 
     const searchRequest: SoloditRequest = {
       page: args.page || 1,
