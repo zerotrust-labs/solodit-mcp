@@ -5,6 +5,7 @@ This document describes the complete CI/CD pipeline and code quality tooling con
 ## Overview
 
 The project now includes a comprehensive CI/CD pipeline with:
+
 - ✅ ESLint for code linting
 - ✅ Prettier for code formatting
 - ✅ Husky for git hooks
@@ -20,12 +21,14 @@ The project now includes a comprehensive CI/CD pipeline with:
 **File:** `eslint.config.js`
 
 Modern ESLint flat config with:
+
 - TypeScript support via `typescript-eslint`
 - Prettier integration
 - Recommended rules from `@eslint/js`
 - Custom rules for unused variables
 
 **Usage:**
+
 ```bash
 npm run lint        # Check for linting errors
 npm run lint:fix    # Auto-fix linting errors
@@ -36,6 +39,7 @@ npm run lint:fix    # Auto-fix linting errors
 **Files:** `.prettierrc`, `.prettierignore`
 
 Code formatting configuration:
+
 - 2 spaces indentation
 - Semicolons enabled
 - Double quotes
@@ -43,6 +47,7 @@ Code formatting configuration:
 - LF line endings
 
 **Usage:**
+
 ```bash
 npm run format        # Format all source files
 npm run format:check  # Check formatting without changing files
@@ -53,10 +58,12 @@ npm run format:check  # Check formatting without changing files
 **Directory:** `.husky/`
 
 Git hooks configuration:
+
 - Pre-commit hook runs `lint-staged`
 - Automatically initialized with `npm prepare`
 
 **Setup:**
+
 ```bash
 npm run prepare  # Initialize Husky (runs automatically on npm install)
 ```
@@ -66,6 +73,7 @@ npm run prepare  # Initialize Husky (runs automatically on npm install)
 **Configuration:** In `package.json`
 
 Runs checks on staged files before commit:
+
 - TypeScript files: ESLint + Prettier
 - JSON/Markdown files: Prettier only
 
@@ -85,6 +93,7 @@ Runs checks on staged files before commit:
 Automated CI pipeline with two jobs:
 
 #### Quality Job
+
 - Runs on Node.js 18.x and 20.x
 - Type checking with TypeScript
 - Linting with ESLint
@@ -92,16 +101,19 @@ Automated CI pipeline with two jobs:
 - Build verification
 
 #### Security Job
+
 - Runs npm audit for security vulnerabilities
 - Checks for moderate and higher severity issues
 
 **Triggers:**
+
 - Push to `main` or `develop` branches
 - Pull requests to `main` or `develop` branches
 
 ### 6. TypeScript Type Checking
 
 **Usage:**
+
 ```bash
 npm run type-check  # Run TypeScript compiler without emitting files
 ```
@@ -113,16 +125,16 @@ All available scripts in `package.json`:
 ```json
 {
   "scripts": {
-    "build": "tsc",                    // Compile TypeScript
-    "dev": "tsx src/index.ts",         // Run in development mode
-    "start": "node dist/index.js",     // Run compiled version
-    "watch": "tsc --watch",            // Watch mode compilation
-    "lint": "eslint src/**/*.ts",      // Lint source files
-    "lint:fix": "eslint src/**/*.ts --fix",  // Auto-fix linting
-    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\"",  // Format files
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json}\"",  // Check formatting
-    "type-check": "tsc --noEmit",      // Type check without building
-    "prepare": "husky"                 // Initialize Husky
+    "build": "tsc", // Compile TypeScript
+    "dev": "tsx src/index.ts", // Run in development mode
+    "start": "node dist/index.js", // Run compiled version
+    "watch": "tsc --watch", // Watch mode compilation
+    "lint": "eslint src/**/*.ts", // Lint source files
+    "lint:fix": "eslint src/**/*.ts --fix", // Auto-fix linting
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\"", // Format files
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json}\"", // Check formatting
+    "type-check": "tsc --noEmit", // Type check without building
+    "prepare": "husky" // Initialize Husky
   }
 }
 ```
@@ -137,6 +149,8 @@ All available scripts in `package.json`:
    npm install
    ```
 3. Husky will be automatically initialized
+
+**Important:** The `package-lock.json` file is tracked in git to ensure consistent dependency versions across all environments and in CI/CD.
 
 ### Daily Development
 
@@ -188,6 +202,7 @@ npm run build
 ### Success Criteria
 
 All checks must pass:
+
 - ✅ TypeScript compiles without errors
 - ✅ No linting errors
 - ✅ Code is properly formatted
