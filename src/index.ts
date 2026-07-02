@@ -194,13 +194,21 @@ async function searchSoloditFindings(
   }
 
   const url = `${SOLODIT_API_BASE_URL}/findings`;
+  // The Solodit API expects search params nested under `filters`, with page/pageSize at top level.
+  const { page, pageSize, ...filters } = (request ?? {}) as Record<
+    string,
+    unknown
+  >;
+  const payload: Record<string, unknown> = { filters };
+  if (page !== undefined) payload.page = page;
+  if (pageSize !== undefined) payload.pageSize = pageSize;
   const init: RequestInit = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "X-Cyfrin-API-Key": SOLODIT_API_KEY,
     },
-    body: JSON.stringify(request),
+    body: JSON.stringify(payload),
   };
 
   for (let attempt = 0; attempt <= SOLODIT_API_MAX_RETRIES; attempt++) {
